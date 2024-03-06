@@ -16,18 +16,14 @@ import { Input } from "@/components/ui/input"
 import Image from "next/image"
 import Link from "next/link"
 import { Routes } from "../../../Routes"
-import { useToast } from "@/components/ui/use-toast"
+import { useSignInMutation } from "@/lib/react-query/mutations"
+import { ClipLoader } from "react-spinners"
+import { useToast } from "../ui/use-toast"
 import { useRouter } from 'next/navigation'
-import ClipLoader from "react-spinners/ClipLoader";
-import { useCreateUserMutation } from "@/lib/react-query/mutations"
+import { useAuthContext } from "@/context/authContext"
+import { getCurrentUser } from "@/lib/appwrite/api"
 
 const formSchema = z.object({
-    name: z.string().min(2, {
-        message: "Name must be atleast 2 characters",
-      }),
-    username: z.string().min(2, {
-        message: "Username must be atleast 2 characters",
-      }),
     email: z.string().email({
       message: "Email must be a valid email address",
     }),
@@ -38,67 +34,45 @@ const formSchema = z.object({
 
 type Props = {}
 
-const SignUpForm = (props: Props) => {
+const SignInForm = (props: Props) => {
   const { toast } = useToast()
   const router = useRouter()
-  const { mutateAsync:createUser, isPending } = useCreateUserMutation()
+  const {session, setSession} = useAuthContext()
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "",
-      username:"",
       email: "",
       password:""
     },
   })
- 
+  const { mutateAsync:signIn, isPending } = useSignInMutation()
+
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      await createUser(values)
-      form.reset()
-      router.push(Routes.SignIn)
+      const session = await signIn(values)
+      if(session){
+        const user = await getCurrentUser()
+        setSession(user)
+        router.push(Routes.Home)
+        form.reset()
+      }
     } catch (error:any) {
         toast({        
-          title: "Sign Up failed",
+          title: "Sign In failed. Please try again.",
           description:error.message
         })
     }
   }
+  console.log(session)
   return (
     <div className="flex justify-center items-center flex-1">
         <div className="flex flex-col flex-center sm:w-420">
             <Image src='/assets/images/logo.svg' width={200} height={100} alt='logo'/>
             <h2 className="h3-bold md:h2-bold pt-5 sm:pt-12">Create a new account</h2>
-            <p className="text-light-3 small-medium md:base-regular mt-2">To use Snapgram, Please enter your details</p>
+            <p className="text-light-3 small-medium md:base-regular mt-2">To use Snapgram, Please enter your credentials</p>
             <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col w-full gap-5 mt-4">
-                <FormField
-                    control={form.control}
-                    name="name"
-                    render={({ field }) => (
-                        <FormItem>
-                        <FormLabel>Name</FormLabel>
-                        <FormControl>
-                            <Input placeholder="Enter Your Name" className="shad-input" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                        </FormItem>
-                    )}
-                    />
-                <FormField
-                    control={form.control}
-                    name="username"
-                    render={({ field }) => (
-                        <FormItem>
-                        <FormLabel>Username</FormLabel>
-                        <FormControl>
-                            <Input placeholder="Enter Username" className="shad-input" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                        </FormItem>
-                    )}
-                    />
-                <FormField
+                <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col w-full gap-5 mt-4">
+                    <FormField
                     control={form.control}
                     name="email"
                     render={({ field }) => (
@@ -111,31 +85,31 @@ const SignUpForm = (props: Props) => {
                         </FormItem>
                     )}
                     />
-                <FormField
+                    <FormField
                     control={form.control}
                     name="password"
                     render={({ field }) => (
                         <FormItem>
                         <FormLabel>Password</FormLabel>
                         <FormControl>
-                            <Input placeholder="Enter Password" type="password" className="shad-input" {...field} />
+                            <Input placeholder="Enter Password" type='password' className="shad-input" {...field} />
                         </FormControl>
                         <FormMessage />
                         </FormItem>
                     )}
                     />
-                    <Button type="submit" disabled={isPending} className="shad-button_primary">
+                     <Button type="submit" disabled={isPending} className="shad-button_primary">
                         {isPending ? 
-                        <ClipLoader size={30}/>:'Sign Up'
+                        <ClipLoader size={30}/>:'Sign In'
                         }
                     </Button>
-                    <p className="text-small-regular self-center text-light-2 mt-2 ">Already have an account?  <Link className="text-primary-500 text-small-semibold mt-1" href={Routes.SignIn}> Sign In</Link></p>
+                    <p className="text-small-regular self-center text-light-2 mt-2 ">Don&apos;t have an account?  <Link className="text-primary-500 text-small-semibold mt-1" href={Routes.SignUp}> Sign Up</Link></p>
 
-              </form>
+                </form>
             </Form>
         </div>
     </div>
   )
 }
 
-export default SignUpForm
+export default SignInForm

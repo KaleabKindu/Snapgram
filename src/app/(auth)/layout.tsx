@@ -5,12 +5,13 @@ export default function Layout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
   return (
-    <div className='flex gap-3 h-screen'>
-        {children}
-        <div className='relative flex-1 hidden xl:block '>
-            <Image className='object-cover' src={'/assets/images/side-img.svg'} alt='logo' fill/>
-        </div>
-    </div>
+      <div className='flex gap-3 h-screen'>
+          {children}
+          <div className='relative flex-1 hidden xl:block '>
+              <Image className='object-cover' src={'/assets/images/side-img.svg'} alt='logo' fill/>
+          </div>
+      </div>
   );
 }
