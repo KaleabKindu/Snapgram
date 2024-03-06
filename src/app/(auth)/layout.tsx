@@ -8,8 +8,8 @@ export default function Layout({
   return (
     <div className='flex gap-3 h-screen'>
         {children}
-        <div className='relative flex-1'>
-            <Image className='hidden xl:block object-cover' src={'/assets/images/side-img.svg'} alt='logo' fill/>
+        <div className='relative flex-1 hidden xl:block '>
+            <Image className='object-cover' src={'/assets/images/side-img.svg'} alt='logo' fill/>
         </div>
     </div>
   );

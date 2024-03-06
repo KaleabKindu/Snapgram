@@ -16,6 +16,11 @@ import { Input } from "@/components/ui/input"
 import Image from "next/image"
 import Link from "next/link"
 import { Routes } from "../../../Routes"
+import { createUser } from "@/lib/appwrite/api"
+import { useState } from "react"
+import { useToast } from "@/components/ui/use-toast"
+import { useRouter } from 'next/navigation'
+import ClipLoader from "react-spinners/ClipLoader";
 
 const formSchema = z.object({
     name: z.string().min(2, {
@@ -35,6 +40,9 @@ const formSchema = z.object({
 type Props = {}
 
 const SignUpForm = (props: Props) => {
+  const { toast } = useToast()
+  const router = useRouter()
+  const [ isLoading, setIsLoading] = useState(false)
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -45,10 +53,20 @@ const SignUpForm = (props: Props) => {
     },
   })
  
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values)
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    try {
+      setIsLoading(true)
+      await createUser(values)
+      router.push(Routes.SignIn)
+    } catch (error:any) {
+        toast({        
+          title: "Sign Up failed",
+          description:error.message
+        })
+    }finally{
+      setIsLoading(false)
+    }
   }
-
   return (
     <div className="flex justify-center items-center flex-1">
         <div className="flex flex-col flex-center sm:w-420">
@@ -103,13 +121,17 @@ const SignUpForm = (props: Props) => {
                         <FormItem>
                         <FormLabel>Password</FormLabel>
                         <FormControl>
-                            <Input placeholder="Enter Password" className="shad-input" {...field} />
+                            <Input placeholder="Enter Password" type="password" className="shad-input" {...field} />
                         </FormControl>
                         <FormMessage />
                         </FormItem>
                     )}
                     />
-                    <Button type="submit" className="shad-button_primary">Sign Up</Button>
+                    <Button type="submit" disabled={isLoading} className="shad-button_primary">
+                        {isLoading ? 
+                        <ClipLoader size={30}/>:'Sign Up'
+                        }
+                    </Button>
                     <p className="text-small-regular self-center text-light-2 mt-2 ">Already have an account?  <Link className="text-primary-500 text-small-semibold mt-1" href={Routes.SignIn}> Sign In</Link></p>
 
                 </form>
