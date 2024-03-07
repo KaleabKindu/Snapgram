@@ -63,13 +63,12 @@ const SignInForm = (props: Props) => {
         })
     }
   }
-  console.log(session)
   return (
     <div className="flex justify-center items-center flex-1">
         <div className="flex flex-col flex-center sm:w-420">
             <Image src='/assets/images/logo.svg' width={200} height={100} alt='logo'/>
-            <h2 className="h3-bold md:h2-bold pt-5 sm:pt-12">Create a new account</h2>
-            <p className="text-light-3 small-medium md:base-regular mt-2">To use Snapgram, Please enter your credentials</p>
+            <h2 className="h3-bold md:h2-bold pt-5 sm:pt-12">Login to your account</h2>
+            <p className="text-light-3 small-medium md:base-regular mt-2">Welcome back! Please enter your credentials</p>
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col w-full gap-5 mt-4">
                     <FormField

@@ -1,6 +1,6 @@
 import { ICredentials, INewUser } from "@/types";
 import { account, avatars } from "./config";
-import { ID } from "appwrite";
+import { ID, Query } from "appwrite";
 import { IUser } from "@/types";
 import { appwriteconfig, databases } from "./config";
 
@@ -52,13 +52,40 @@ export const signIn = async ({email, password}:ICredentials) => {
         throw Error(error.message)
     }
 }
+export const signOut = async () => {
+    try {
+        const session = await account.deleteSession('current')
+        return session
+    } catch (error:any) {
+        throw Error(error.message)
+    }
+}
+
+export const getSession = async () => {
+    try {
+        const user = await account.get()
+        if(!user) throw Error
+
+        return user
+    } catch (error) {
+        console.log(error)
+    }
+}
 
 export const getCurrentUser = async () => {
     try {
         const user = await account.get()
         if(!user) throw Error
 
-        return user
+        const response = await databases.listDocuments(
+            appwriteconfig.databaseId,
+            appwriteconfig.userCollctionId,
+            [
+                Query.equal('id', user.$id)
+            ]
+        )
+
+        return response.documents[0]
     } catch (error) {
         console.log(error)
     }

@@ -1,4 +1,5 @@
 import { Dispatch, SetStateAction } from "react";
+import { IconType } from "react-icons";
 
 export interface IUser {
     id: string;
@@ -24,4 +25,10 @@ export interface IUser {
   export interface IAuthContext {
     session:any,
     setSession:Dispatch<SetStateAction<any>>
+  }
+
+  export interface INavLink {
+    icon:IconType,
+    route:string,
+    label:string
   }
