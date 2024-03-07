@@ -32,3 +32,20 @@ export interface IUser {
     route:string,
     label:string
   }
+
+  export interface INewPost {
+    creator?:string,
+    caption:string,
+    photo:File[],
+    location:string,
+    tags:string
+  }
+
+  export interface IPost {
+    creator:string,
+    caption:string,
+    imageUrl:URL,
+    imageId:string,
+    location:string,
+    tags:string[]
+  }
