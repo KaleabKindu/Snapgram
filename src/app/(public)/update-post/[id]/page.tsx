@@ -1,11 +1,19 @@
-import React from 'react'
+'use client'
+import CreatePostForm from "@/components/forms/CreatePostForm"
+import { useGetPostByIdQuery } from "@/lib/react-query/queries"
 
-type Props = {}
+type Props = {
+  params:{id:string}
+}
 
-const UpdatePost = (props: Props) => {
+const EditPost = ({params}: Props) => {
+  const { data:post } = useGetPostByIdQuery({ postId:params.id})
   return (
-    <div>UpdatePost</div>
+    <div className="common-container">
+        <h3 className="h3-bold md:h2-bold text-left w-full">Edit Post</h3>
+        <CreatePostForm post={post} />
+    </div>
   )
 }
 
-export default UpdatePost
+export default EditPost

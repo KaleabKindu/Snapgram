@@ -1,4 +1,4 @@
-import { ICredentials, INewPost, INewUser, IPost } from "@/types";
+import { ICredentials, INewPost, INewUser, IPost, IUpdatePost } from "@/types";
 import { account, avatars, storage } from "./config";
 import { ID, Query } from "appwrite";
 import { IUser } from "@/types";
@@ -197,6 +197,76 @@ export const deleteSavedPost = async (savedId:string) => {
         const saved = await databases.deleteDocument( appwriteconfig.databaseId, appwriteconfig.savedCollectionId, savedId)
         if(!saved) throw Error;
         return saved
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+export const updatePostById = async (post:IUpdatePost) => {
+    const hasUploadedFile = post.photo.length > 0
+    let image = {
+        imageUrl:post.imageUrl,
+        imageId:post.imageId
+    }
+
+    try {
+        if(hasUploadedFile){
+
+            const uploadedFile = await uploadFile(post.photo[0])
+    
+            if(!uploadedFile) throw Error;
+    
+            const imageUrl = await getFilePreviewUrl(uploadedFile?.$id as string)
+
+            if(!imageUrl){
+                await deleteFile(uploadedFile.$id as string)
+                throw Error
+            }
+            image = {
+                imageUrl:imageUrl,
+                imageId:uploadedFile.$id
+            }
+        }
+
+        const payload = {
+            caption:post.caption,
+            ...image,
+            location:post.location,
+            tags:post.tags.split(',')
+        }
+        const updatedPost = await databases.updateDocument(
+            appwriteconfig.databaseId,
+            appwriteconfig.postCollectionId,
+            post.id,
+            payload
+        )
+        return updatedPost
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+export const deletePostById = async (postId:string, imageId:string) => {
+    try {
+        await databases.deleteDocument(appwriteconfig.databaseId, appwriteconfig.postCollectionId, postId)
+
+        await storage.deleteFile(appwriteconfig.storageId, imageId)
+
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+export const getPostById = async (postId:string) => {
+    try {
+        const post = databases.getDocument(
+            appwriteconfig.databaseId, 
+            appwriteconfig.postCollectionId, 
+            postId
+            )
+        if(!post) throw Error;
+
+        return post
     } catch (error) {
         console.log(error)
     }

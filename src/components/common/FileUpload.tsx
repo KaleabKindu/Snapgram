@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Dropzone from 'react-dropzone'
 import Image from 'next/image'
 import { Button } from '../ui/button'
@@ -8,10 +8,15 @@ type Props = {
 }
 
 const FileUpload = ({ onChange, imageUrl }: Props) => {
-    const [ fileUrl, setFileUrl] = useState(imageUrl || '')
+    const [ fileUrl, setFileUrl] = useState(imageUrl)
     const accept = {
         'image/*':['.png', '.jpg', '.jpeg', '.svg']
     }
+   useEffect(() => {
+    if(imageUrl){
+      setFileUrl(imageUrl)
+    }
+   }, [imageUrl])
   return (
 <Dropzone accept={accept} onDrop={acceptedFiles => {
     const url = URL.createObjectURL(acceptedFiles[0])

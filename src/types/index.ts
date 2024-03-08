@@ -40,6 +40,15 @@ export interface IUser {
     location:string,
     tags:string
   }
+  export interface IUpdatePost {
+    id:string,
+    caption:string,
+    photo:File[],
+    imageUrl?:URL,
+    imageId?:string,
+    location:string,
+    tags:string
+  }
 
   export interface IPost {
     creator:string,

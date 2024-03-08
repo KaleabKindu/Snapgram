@@ -22,7 +22,8 @@ import { useRouter } from 'next/navigation'
 import { useAuthContext } from "@/context/authContext"
 import FileUpload from "../common/FileUpload"
 import { Models } from "appwrite"
-import { useCreatePostMutation } from "@/lib/react-query/mutations"
+import { useCreatePostMutation, useUpdatePostMutation } from "@/lib/react-query/mutations"
+import { useState, useEffect } from "react"
 
 const formSchema = z.object({
     caption: z.string().max(2200,{
@@ -43,22 +44,35 @@ const CreatePostForm = ({ post }: Props) => {
   const { toast } = useToast()
   const router = useRouter()
   const {session, setSession} = useAuthContext()
-  const { mutateAsync:createPost, isPending } = useCreatePostMutation()
+  const { mutateAsync:createPost, isPending:creating } = useCreatePostMutation()
+  const { mutateAsync:updatePost, isPending:updating } = useUpdatePostMutation()
+
+  const [mediaUrl, setMediaUrl] = useState<string>()
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      caption:post?.caption || '',
+      caption:'',
       photo: [],
-      location:post?.location || '',
-      tags:post?.tags?.join(',') || ''
+      location:'',
+      tags:''
     },
   })
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      const post = await createPost({ creator:session.$id, ...values})
+      let newPost;
+      if(post){
+         newPost = await updatePost({
+          id:post.$id,
+          imageUrl:post.imageUrl,
+          imageId:post.imageId,
+          ...values,
+        })
+      }else {
+         newPost = await createPost({ creator:session.$id, ...values})
+      }
       form.reset()
-      router.push(`${Routes.Posts}/${post?.$id}`)
+      router.push(`${Routes.Posts}/${newPost?.$id}`)
     } catch (error) {
       toast({
         title:'Failed to Create Post',
@@ -66,6 +80,15 @@ const CreatePostForm = ({ post }: Props) => {
       })
     }
   }
+  useEffect(() => {
+    if(post){
+      form.setValue('caption', post.caption)
+      form.setValue('location', post.location)
+      form.setValue('tags', post.tags.join(','))
+      setMediaUrl(post.imageUrl)
+    }
+
+  }, [post])
   return (
     <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col w-full gap-5 max-w-5xl  mt-4">
@@ -89,7 +112,7 @@ const CreatePostForm = ({ post }: Props) => {
                 <FormItem>
                 <FormLabel className="shad-form_label">Add Photo</FormLabel>
                 <FormControl>
-                    <FileUpload imageUrl={post?.imageUrl} onChange={field.onChange}/>
+                    <FileUpload imageUrl={mediaUrl as string} onChange={field.onChange}/>
                 </FormControl>
                 <FormMessage className="shad-form_message"/>
                 </FormItem>
@@ -121,9 +144,9 @@ const CreatePostForm = ({ post }: Props) => {
                 </FormItem>
             )}
             />
-            <Button type="submit" disabled={isPending} className="self-end shad-button_primary">
-                {isPending ? 
-                <ClipLoader size={30}/>:'Post'
+            <Button type="submit" disabled={creating || updating} className="self-end shad-button_primary">
+                {(creating || updating) ? 
+                <ClipLoader size={30}/>:post ? 'Edit Post':'Create Post'
                 }
             </Button>
 
