@@ -155,3 +155,49 @@ export const deleteFile = async (id:string) => {
         console.log(error)
     }
 }
+
+export const getRecentPosts = async () => {
+    try {
+        const posts = await databases.listDocuments(
+            appwriteconfig.databaseId, 
+            appwriteconfig.postCollectionId,
+            [Query.orderDesc('$createdAt'), Query.limit(30)]
+            )  
+        if(!posts) throw Error;
+        
+        return posts.documents
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+
+export const likePost = async (postId:string, likes:string[]) => {
+    try {
+        const updatedPost = await databases.updateDocument( appwriteconfig.databaseId, appwriteconfig.postCollectionId, postId, { likes: [...likes] })
+        if(!updatedPost) throw Error;
+        return updatedPost
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+export const savePost = async (postId:string, userId:string) => {
+    try {
+        const saved = await databases.createDocument( appwriteconfig.databaseId, appwriteconfig.savedCollectionId, ID.unique(), { user: userId, post:postId })
+        if(!saved) throw Error;
+        return saved
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+export const deleteSavedPost = async (savedId:string) => {
+    try {
+        const saved = await databases.deleteDocument( appwriteconfig.databaseId, appwriteconfig.savedCollectionId, savedId)
+        if(!saved) throw Error;
+        return saved
+    } catch (error) {
+        console.log(error)
+    }
+}
