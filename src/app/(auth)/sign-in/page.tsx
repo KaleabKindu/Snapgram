@@ -1,8 +1,8 @@
-import SignInForm from '@/components/forms/SignInForm'
-type Props = {}
+import SignInForm from "@/components/forms/SignInForm";
+type Props = {};
 
 const SignIn = (props: Props) => {
-  return (<SignInForm/>)
-}
+  return <SignInForm />;
+};
 
-export default SignIn
+export default SignIn;

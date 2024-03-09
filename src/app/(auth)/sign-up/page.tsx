@@ -1,8 +1,8 @@
-import SignUpForm from '@/components/forms/SignUpForm'
-type Props = {}
+import SignUpForm from "@/components/forms/SignUpForm";
+type Props = {};
 
 const SignUp = (props: Props) => {
-  return (<SignUpForm/>)
-}
+  return <SignUpForm />;
+};
 
-export default SignUp
+export default SignUp;

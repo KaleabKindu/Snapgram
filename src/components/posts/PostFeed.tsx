@@ -1,21 +1,15 @@
-'use client'
+"use client";
 
-import { useGetRecentPostQuery } from "@/lib/react-query/queries"
-import PostCard from "./PostCard"
+import { useGetRecentPostQuery } from "@/lib/react-query/queries";
+import PostCard from "./PostCard";
 
-type Props = {}
+type Props = {};
 
 const PostFeed = (props: Props) => {
-    const { data:posts, isPending, isError } = useGetRecentPostQuery()
+  const { data: posts, isPending, isError } = useGetRecentPostQuery();
   return (
-    <>
-        {
-            posts?.map((post, index) => (
-                <PostCard key={index} post={post}/>
-            ))
-        }
-    </>
-  )
-}
+    <>{posts?.map((post, index) => <PostCard key={index} post={post} />)}</>
+  );
+};
 
-export default PostFeed
+export default PostFeed;
