@@ -11,7 +11,7 @@ const EditPost = ({params}: Props) => {
   return (
     <div className="common-container">
         <h3 className="h3-bold md:h2-bold text-left w-full">Edit Post</h3>
-        <CreatePostForm post={post} />
+        {post && <CreatePostForm post={post} />}
     </div>
   )
 }

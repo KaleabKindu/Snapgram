@@ -12,11 +12,6 @@ const FileUpload = ({ onChange, imageUrl }: Props) => {
     const accept = {
         'image/*':['.png', '.jpg', '.jpeg', '.svg']
     }
-   useEffect(() => {
-    if(imageUrl){
-      setFileUrl(imageUrl)
-    }
-   }, [imageUrl])
   return (
 <Dropzone accept={accept} onDrop={acceptedFiles => {
     const url = URL.createObjectURL(acceptedFiles[0])
@@ -40,7 +35,7 @@ const FileUpload = ({ onChange, imageUrl }: Props) => {
                     <Image src='/assets/icons/file-upload.svg' width={100} height={100} alt='file upload' />
                     <h3 className='base-medium text-light-2 mb-2 mt-6'>Drag and Drop Photo here</h3>
                     <p className='text-light-4 small-regular mb-6'>SVG, PNG, JPG</p>
-                    <Button className='shad-button_dark_4'>Upload File</Button>
+                    <Button type='button' className='shad-button_dark_4'>Upload File</Button>
                 </div>
               )
         }

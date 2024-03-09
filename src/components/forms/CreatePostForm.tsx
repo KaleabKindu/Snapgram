@@ -43,18 +43,17 @@ type Props = {
 const CreatePostForm = ({ post }: Props) => {
   const { toast } = useToast()
   const router = useRouter()
-  const {session, setSession} = useAuthContext()
+  const {session} = useAuthContext()
   const { mutateAsync:createPost, isPending:creating } = useCreatePostMutation()
   const { mutateAsync:updatePost, isPending:updating } = useUpdatePostMutation()
 
-  const [mediaUrl, setMediaUrl] = useState<string>()
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      caption:'',
+      caption: post?.caption || '',
       photo: [],
-      location:'',
-      tags:''
+      location: post?.location || '',
+      tags: post?.tags.join(',') || ''
     },
   })
 
@@ -80,15 +79,6 @@ const CreatePostForm = ({ post }: Props) => {
       })
     }
   }
-  useEffect(() => {
-    if(post){
-      form.setValue('caption', post.caption)
-      form.setValue('location', post.location)
-      form.setValue('tags', post.tags.join(','))
-      setMediaUrl(post.imageUrl)
-    }
-
-  }, [post])
   return (
     <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col w-full gap-5 max-w-5xl  mt-4">
@@ -112,7 +102,7 @@ const CreatePostForm = ({ post }: Props) => {
                 <FormItem>
                 <FormLabel className="shad-form_label">Add Photo</FormLabel>
                 <FormControl>
-                    <FileUpload imageUrl={mediaUrl as string} onChange={field.onChange}/>
+                    <FileUpload imageUrl={post?.imageUrl} onChange={field.onChange}/>
                 </FormControl>
                 <FormMessage className="shad-form_message"/>
                 </FormItem>
@@ -138,7 +128,7 @@ const CreatePostForm = ({ post }: Props) => {
                 <FormItem>
                 <FormLabel className="shad-form_label">Add Tags (separated by comma)</FormLabel>
                 <FormControl>
-                    <Input placeholder="Enter Location" className="shad-input" {...field} />
+                    <Input placeholder="JS, Python, Golang, Java" className="shad-input" {...field} />
                 </FormControl>
                 <FormMessage className="shad-form_message"/>
                 </FormItem>

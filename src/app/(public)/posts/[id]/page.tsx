@@ -1,11 +1,20 @@
-import React from 'react'
+'use client'
+import CreatePostForm from "@/components/forms/CreatePostForm"
+import PostDetail from "@/components/posts/PostDetail"
+import { useGetPostByIdQuery } from "@/lib/react-query/queries"
+import { Models } from "appwrite"
 
-type Props = {}
+type Props = {
+  params:{id:string}
+}
 
-const Posts = (props: Props) => {
+const Post = ({params}: Props) => {
+  const { data:post } = useGetPostByIdQuery({ postId:params.id})
   return (
-    <div>Posts</div>
+    <div className="flex flex-1">
+        {post && <PostDetail post={post} />}
+    </div>
   )
 }
 
-export default Posts
+export default Post
