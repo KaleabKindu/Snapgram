@@ -286,3 +286,42 @@ export const getPostById = async (postId: string) => {
     console.log(error);
   }
 };
+
+export const getInfinitePosts = async ({
+  pageParam,
+}: {
+  pageParam: number;
+}) => {
+  const queries: string[] = [
+    Query.orderDesc("$createdAt"),
+    Query.limit(20),
+    Query.offset(pageParam),
+  ];
+  try {
+    const result = await databases.listDocuments(
+      appwriteconfig.databaseId,
+      appwriteconfig.postCollectionId,
+      queries,
+    );
+    if (!result) throw Error;
+
+    return result;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const searchPosts = async (query: string) => {
+  try {
+    const result = await databases.listDocuments(
+      appwriteconfig.databaseId,
+      appwriteconfig.postCollectionId,
+      [Query.search("caption", query)],
+    );
+    if (!result) throw Error;
+
+    return result;
+  } catch (error) {
+    console.log(error);
+  }
+};

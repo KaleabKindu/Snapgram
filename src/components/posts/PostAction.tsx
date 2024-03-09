@@ -32,7 +32,8 @@ const PostAction = ({ post }: Props) => {
   const { mutateAsync: deleteSavedPost } = useDeleteSavedPostMutation({
     postId: post.$id,
   });
-  const handleLike = () => {
+  const handleLike = (e: any) => {
+    e.preventDefault();
     const newLikes = likes.includes(session.$id)
       ? likes.filter((id) => id !== session.$id)
       : [...likes, session.$id];
@@ -40,7 +41,8 @@ const PostAction = ({ post }: Props) => {
     likePost(newLikes);
   };
 
-  const handleSave = async () => {
+  const handleSave = (e: any) => {
+    e.preventDefault();
     const savedRecord = post.saves?.find(
       (record: Models.Document) => record.user.id === session.id,
     );
