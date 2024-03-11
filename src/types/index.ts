@@ -6,7 +6,8 @@ export interface IUser {
   name: string;
   username: string;
   email: string;
-  imageUrl: URL;
+  imageUrl: string;
+  imageId?: string;
   bio: string;
 }
 
@@ -23,7 +24,7 @@ export interface ICredentials {
 }
 
 export interface IAuthContext {
-  session: any;
+  session: IUser;
   setSession: Dispatch<SetStateAction<any>>;
 }
 

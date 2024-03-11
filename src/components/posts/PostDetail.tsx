@@ -56,7 +56,7 @@ const PostDetail = ({ post }: Props) => {
                 </p>
               </div>
             </div>
-            {session?.id === post.creator?.id && (
+            {session.id === post.creator?.id && (
               <div className="flex items-center ml-auto">
                 <Link href={`${Routes.UpdatePost}/${post.$id}`}>
                   <BiEdit size={30} className="text-primary-500" />

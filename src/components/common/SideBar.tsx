@@ -36,21 +36,21 @@ const SideBar = (props: Props) => {
           />
         </Link>
         <Link
-          href={`${Routes.Profile}/${session?.id}`}
+          href={`${Routes.Profile}/${session.id}`}
           className="flex items-center gap-3"
         >
           <div className="relative w-14 h-14 rounded-full">
             <Image
-              src={session?.imageUrl || "/assets/icons/profile-placeholder.svg"}
+              src={session.imageUrl || "/assets/icons/profile-placeholder.svg"}
               className="rounded-full"
               fill
               alt="Profile pic"
             />
           </div>
           <div className="flex flex-col">
-            <div className="body-bold">{session?.name}</div>
+            <div className="body-bold">{session.name}</div>
             <div className="small-regular text-light-3">
-              @{session?.username}
+              @{session.username}
             </div>
           </div>
         </Link>

@@ -33,11 +33,11 @@ const TopBar = (props: Props) => {
         </Link>
         <div className="flex items-center gap-3">
           <Link
-            href={`${Routes.Profile}/${session?.$id}`}
+            href={`${Routes.Profile}/${session.id}`}
             className="relative w-8 h-8 rounded-full"
           >
             <Image
-              src={session?.imageUrl || "/assets/icons/profile-placeholder.svg"}
+              src={session.imageUrl || "/assets/icons/profile-placeholder.svg"}
               className="rounded-full"
               fill
               alt="Profile pic"

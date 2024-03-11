@@ -73,7 +73,7 @@ const CreatePostForm = ({ post }: Props) => {
           ...values,
         });
       } else {
-        newPost = await createPost({ creator: session.$id, ...values });
+        newPost = await createPost({ creator: session.id, ...values });
       }
       form.reset();
       router.push(`${Routes.Posts}/${newPost?.$id}`);

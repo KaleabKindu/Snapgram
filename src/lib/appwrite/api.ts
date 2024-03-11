@@ -33,7 +33,7 @@ export const createUser = async (user: INewUser) => {
       name: newUser.name,
       username: user.username,
       email: newUser.email,
-      imageUrl: avatarUrl,
+      imageUrl: avatarUrl.toString(),
       bio: "",
     });
     return savedUser;
@@ -321,6 +321,21 @@ export const searchPosts = async (query: string) => {
     if (!result) throw Error;
 
     return result;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getSavedPostsByUserId = async (userId: string) => {
+  try {
+    const posts = await databases.listDocuments(
+      appwriteconfig.databaseId,
+      appwriteconfig.savedCollectionId,
+      [Query.equal("user", userId)],
+    );
+    if (!posts) throw Error;
+
+    return posts;
   } catch (error) {
     console.log(error);
   }

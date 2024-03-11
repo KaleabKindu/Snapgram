@@ -4,6 +4,7 @@ import {
   getInfinitePosts,
   getPostById,
   getRecentPosts,
+  getSavedPostsByUserId,
   searchPosts,
 } from "../appwrite/api";
 
@@ -39,5 +40,12 @@ export const useGetSearchPosts = (query: string) => {
   return useQuery({
     queryKey: [QUERY_KEYS.GET_POSTS, query],
     queryFn: () => searchPosts(query),
+  });
+};
+
+export const useGetSavedPostsQuery = (userId: string) => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.GET_SAVED_POSTS],
+    queryFn: () => getSavedPostsByUserId(userId),
   });
 };

@@ -7,9 +7,10 @@ import PostAction from "./PostAction";
 
 type Props = {
   posts: Models.Document[];
+  showActions?: boolean;
 };
 
-const GridPostList = ({ posts }: Props) => {
+const GridPostList = ({ posts, showActions = true }: Props) => {
   return (
     <div className="grid-container">
       {posts.map((post) => (
@@ -31,7 +32,7 @@ const GridPostList = ({ posts }: Props) => {
                 </div>
                 <p className="line-clamp-1">{post.creator.name}</p>
               </div>
-              <PostAction post={post} />
+              {showActions && <PostAction post={post} />}
             </div>
           </Link>
         </div>

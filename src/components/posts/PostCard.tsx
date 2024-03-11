@@ -37,7 +37,7 @@ const PostCard = ({ post }: Props) => {
             </p>
           </div>
         </div>
-        {session?.id === post.creator?.id && (
+        {session.id === post.creator?.id && (
           <Link href={`${Routes.UpdatePost}/${post.$id}`} className="ml-auto">
             <BiEdit size={30} className="text-primary-500" />
           </Link>

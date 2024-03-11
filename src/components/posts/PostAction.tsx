@@ -26,7 +26,7 @@ const PostAction = ({ post }: Props) => {
   });
   const { mutateAsync: savePost } = useSavePostMutation({
     postId: post.$id,
-    userId: session?.$id,
+    userId: session.id,
   });
 
   const { mutateAsync: deleteSavedPost } = useDeleteSavedPostMutation({
@@ -34,9 +34,9 @@ const PostAction = ({ post }: Props) => {
   });
   const handleLike = (e: any) => {
     e.preventDefault();
-    const newLikes = likes.includes(session.$id)
-      ? likes.filter((id) => id !== session.$id)
-      : [...likes, session.$id];
+    const newLikes = likes.includes(session.id)
+      ? likes.filter((id) => id !== session.id)
+      : [...likes, session.id];
     setLikes(newLikes);
     likePost(newLikes);
   };
@@ -44,7 +44,7 @@ const PostAction = ({ post }: Props) => {
   const handleSave = (e: any) => {
     e.preventDefault();
     const savedRecord = post.saves?.find(
-      (record: Models.Document) => record.user.id === session.id,
+      (record: Models.Document) => record.user.$id === session.id,
     );
     if (isSaved) {
       setIsSaved(false);
@@ -57,7 +57,7 @@ const PostAction = ({ post }: Props) => {
   useEffect(() => {
     if (session) {
       const saved = post.saves?.find(
-        (save: Models.Document) => save.user.id === session.id,
+        (save: Models.Document) => save.user.$id === session.id,
       );
       saved && setIsSaved(true);
     }
@@ -71,7 +71,7 @@ const PostAction = ({ post }: Props) => {
           className="rounded-full"
           onClick={handleLike}
         >
-          {likes.includes(session?.$id) ? (
+          {likes.includes(session.id) ? (
             <FaHeart className="text-red" size={25} />
           ) : (
             <FaRegHeart size={25} />

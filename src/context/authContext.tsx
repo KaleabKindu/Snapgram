@@ -1,6 +1,6 @@
 "use client";
 import { getCurrentUser } from "@/lib/appwrite/api";
-import { IAuthContext } from "@/types";
+import { IAuthContext, IUser } from "@/types";
 import { useRouter } from "next/navigation";
 import {
   ReactNode,
@@ -10,10 +10,19 @@ import {
   useState,
 } from "react";
 import { Routes } from "../../Routes";
-import { Models } from "appwrite";
+
+const INITIAL_SESSION = {
+  id: "",
+  name: "",
+  username: "",
+  email: "",
+  imageUrl: "",
+  imageId: "",
+  bio: "",
+};
 
 export const AuthContext = createContext<IAuthContext>({
-  session: {},
+  session: INITIAL_SESSION,
   setSession: () => {},
 });
 
@@ -23,15 +32,23 @@ type Props = {
 
 const AuthProvider = ({ children }: Props) => {
   const router = useRouter();
-  const [session, setSession] = useState<Models.Document>();
+  const [session, setSession] = useState<IUser>(INITIAL_SESSION);
   useEffect(() => {
     const checkAuthStatus = async () => {
       try {
         const currentUser = await getCurrentUser();
         if (currentUser) {
-          setSession(currentUser);
+          setSession({
+            id: currentUser.$id,
+            name: currentUser.name,
+            username: currentUser.username,
+            email: currentUser.email,
+            imageUrl: currentUser.imageUrl,
+            imageId: currentUser.imageId,
+            bio: currentUser.bio,
+          });
         } else {
-          setSession(undefined);
+          setSession(INITIAL_SESSION);
           router.push(Routes.SignIn);
         }
       } catch (error) {
