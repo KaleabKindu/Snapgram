@@ -44,15 +44,14 @@ export const bottombarLinks: INavLink[] = [
     route: Routes.Explore,
     label: "Explore",
   },
-
+  {
+    icon: GoPeople,
+    route: Routes.Peoples,
+    label: "People",
+  },
   {
     icon: FaRegBookmark,
     route: Routes.Saved,
     label: "Saved",
-  },
-  {
-    icon: RiImageAddLine,
-    route: Routes.CreatePost,
-    label: "Create",
   },
 ];

@@ -1,3 +1,4 @@
+import MobileCreatePost from "@/components/common/MobileCreatePost";
 import PostFeed from "@/components/posts/PostFeed";
 
 type Props = {};
@@ -9,6 +10,7 @@ const Home = (props: Props) => {
         <h3 className="h3-bold md:h2-bold text-left w-full">Feed</h3>
       </div>
       <PostFeed />
+      <MobileCreatePost />
     </div>
   );
 };
