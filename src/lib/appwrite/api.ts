@@ -340,3 +340,18 @@ export const getSavedPostsByUserId = async (userId: string) => {
     console.log(error);
   }
 };
+
+export const getUsers = async () => {
+  try {
+    const users = await databases.listDocuments(
+      appwriteconfig.databaseId,
+      appwriteconfig.userCollctionId,
+    );
+
+    if (!users) throw Error;
+
+    return users;
+  } catch (error) {
+    console.log(error);
+  }
+};
