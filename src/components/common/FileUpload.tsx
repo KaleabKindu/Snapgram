@@ -25,7 +25,7 @@ const FileUpload = ({ onChange, imageUrl }: Props) => {
         <section>
           <div
             {...getRootProps()}
-            className="flex flex-center flex-col cursor-pointer rounded-xl bg-dark-3 p-5"
+            className="flex flex-center flex-col cursor-pointer rounded-xl bg-dark-4 hover:bg-background hover:border p-5"
           >
             <input {...getInputProps()} className="cursor-pointer" />
             {fileUrl ? (
@@ -54,7 +54,7 @@ const FileUpload = ({ onChange, imageUrl }: Props) => {
                   Drag and Drop Photo here
                 </h3>
                 <p className="text-light-4 small-regular mb-6">SVG, PNG, JPG</p>
-                <Button type="button" className="shad-button_dark_4">
+                <Button type="button" variant="secondary">
                   Upload File
                 </Button>
               </div>

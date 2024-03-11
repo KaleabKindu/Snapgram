@@ -43,7 +43,7 @@ type UserProps = {
 const UserCard = ({ user }: UserProps) => {
   return (
     <Link href={`${Routes.Profile}/${user.$id}`}>
-      <div className="flex flex-col gap-3 items-center p-10 rounded-2xl border border-dark-4/30 min-w-80">
+      <div className="user-card">
         <div className="relative w-14 h-14 rounded-full">
           <Image
             src={user.imageUrl || "/assets/icons/profile-placeholder.svg"}

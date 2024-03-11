@@ -35,7 +35,7 @@ const PostDetail = ({ post }: Props) => {
         <div className="post_details-info">
           <Link
             href={`${Routes.Profile}/${post.creator?.id}`}
-            className="flex items-center justify-between w-full gap-3"
+            className="flex items-center w-full gap-3"
           >
             <div className="relative w-8 h-8 lg:w-12 lg:h-12 rounded-full">
               <Image
@@ -56,7 +56,7 @@ const PostDetail = ({ post }: Props) => {
                 </p>
               </div>
             </div>
-            {session.id === post.creator?.id && (
+            {session.id === post.creator?.$id && (
               <div className="flex items-center ml-auto">
                 <Link href={`${Routes.UpdatePost}/${post.$id}`}>
                   <BiEdit size={30} className="text-primary-500" />
