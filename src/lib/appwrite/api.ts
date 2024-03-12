@@ -271,13 +271,18 @@ export const updatePostById = async (post: IUpdatePost) => {
 
 export const deletePostById = async (postId: string, imageId: string) => {
   try {
-    await databases.deleteDocument(
+    const postStatus = await databases.deleteDocument(
       appwriteconfig.databaseId,
       appwriteconfig.postCollectionId,
       postId,
     );
+    if (!postStatus) throw Error;
 
-    await storage.deleteFile(appwriteconfig.storageId, imageId);
+    const fileStatus = await storage.deleteFile(
+      appwriteconfig.storageId,
+      imageId,
+    );
+    if (!fileStatus) throw Error;
   } catch (error) {
     console.log(error);
   }

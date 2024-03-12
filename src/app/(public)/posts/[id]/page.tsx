@@ -1,17 +1,29 @@
 "use client";
-import CreatePostForm from "@/components/forms/CreatePostForm";
+import Error from "@/components/common/Error";
+import Loader from "@/components/common/Loader";
 import PostDetail from "@/components/posts/PostDetail";
 import { useGetPostByIdQuery } from "@/lib/react-query/queries";
-import { Models } from "appwrite";
 
 type Props = {
   params: { id: string };
 };
 
 const Post = ({ params }: Props) => {
-  const { data: post } = useGetPostByIdQuery({ postId: params.id });
+  const {
+    data: post,
+    isLoading,
+    isError,
+  } = useGetPostByIdQuery({ postId: params.id });
   return (
-    <div className="flex flex-1">{post && <PostDetail post={post} />}</div>
+    <div className="flex flex-1">
+      {isLoading ? (
+        <Loader />
+      ) : isError ? (
+        <Error />
+      ) : (
+        post && <PostDetail post={post} />
+      )}
+    </div>
   );
 };
 

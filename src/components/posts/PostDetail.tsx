@@ -8,16 +8,26 @@ import { useAuthContext } from "@/context/authContext";
 import { Button } from "../ui/button";
 import { MdDelete } from "react-icons/md";
 import PostAction from "./PostAction";
+import { useDeletePostByIdQuery } from "@/lib/react-query/mutations";
+import { useRouter } from "next/navigation";
 
 type Props = {
   post: Models.Document;
 };
 
 const PostDetail = ({ post }: Props) => {
+  const router = useRouter();
   const { session } = useAuthContext();
+  const { mutateAsync: deletePost } = useDeletePostByIdQuery(post.$id);
 
-  const handleDelete = (e: any) => {
+  const handleDelete = async (e: any) => {
     e.preventDefault();
+    try {
+      await deletePost(post.imageId);
+      router.push(Routes.Home);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -63,7 +73,7 @@ const PostDetail = ({ post }: Props) => {
                 <Button
                   variant="ghost"
                   className="rounded-full p-3"
-                  onClick={(e) => handleDelete(e)}
+                  onClick={handleDelete}
                 >
                   <MdDelete
                     size={30}
