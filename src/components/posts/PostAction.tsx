@@ -1,10 +1,9 @@
 import { Models } from "appwrite";
 import { useAuthContext } from "@/context/authContext";
 import { Button } from "../ui/button";
-import { FaRegHeart } from "react-icons/fa";
 import { FaRegBookmark, FaBookmark } from "react-icons/fa";
 import { useEffect, useState } from "react";
-import { FaHeart } from "react-icons/fa";
+import { FaHeart, FaRegHeart } from "react-icons/fa";
 import {
   useDeleteSavedPostMutation,
   useLikePostMutation,
@@ -17,12 +16,12 @@ type Props = {
 
 const PostAction = ({ post }: Props) => {
   const { session } = useAuthContext();
-  const [likes, setLikes] = useState<string[]>(
-    post.likes.map((user: Models.Document) => user.$id),
-  );
+  const [isLiked, setIsLiked] = useState(false);
+  const [likes, setLikes] = useState(post.likes.length);
   const [isSaved, setIsSaved] = useState(false);
   const { mutateAsync: likePost } = useLikePostMutation({
     postId: post.$id,
+    userId: session.id,
   });
   const { mutateAsync: savePost } = useSavePostMutation({
     postId: post.$id,
@@ -34,11 +33,12 @@ const PostAction = ({ post }: Props) => {
   });
   const handleLike = (e: any) => {
     e.preventDefault();
-    const newLikes = likes.includes(session.id)
-      ? likes.filter((id) => id !== session.id)
-      : [...likes, session.id];
-    setLikes(newLikes);
-    likePost(newLikes);
+    const likedRecord = post.likes?.find(
+      (record: Models.Document) => record.user.$id === session.id,
+    );
+    isLiked ? setLikes(likes - 1) : setLikes(likes + 1);
+    setIsLiked(!isLiked);
+    likePost(likedRecord?.$id);
   };
 
   const handleSave = (e: any) => {
@@ -59,7 +59,11 @@ const PostAction = ({ post }: Props) => {
       const saved = post.saves?.find(
         (save: Models.Document) => save.user.$id === session.id,
       );
+      const liked = post.likes?.find(
+        (like: Models.Document) => like.user.$id === session.id,
+      );
       saved && setIsSaved(true);
+      liked && setIsLiked(true);
     }
   }, [session]);
   return (
@@ -71,13 +75,13 @@ const PostAction = ({ post }: Props) => {
           className="rounded-full"
           onClick={handleLike}
         >
-          {likes.includes(session.id) ? (
+          {isLiked ? (
             <FaHeart className="text-red" size={25} />
           ) : (
             <FaRegHeart size={25} />
           )}
         </Button>
-        <p className="small-medium lg:base-medium">{likes.length}</p>
+        <p className="small-medium lg:base-medium">{likes}</p>
       </div>
       <Button
         type="button"

@@ -24,7 +24,7 @@ const Users = (props: Props) => {
           ) : users && users.documents.length > 0 ? (
             <div className="grid-container">
               {users.documents.map((user) => (
-                <UserCard user={user} />
+                <UserCard key={user.$id} user={user} />
               ))}
             </div>
           ) : (

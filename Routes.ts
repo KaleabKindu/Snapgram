@@ -4,12 +4,16 @@ export enum Routes {
   SignUp = "/sign-up",
 
   Home = "/home",
-  Posts = "/posts",
   Explore = "/explore",
-  CreatePost = "/create-post",
+
+  // Posts
+  Posts = "/posts",
+  CreatePost = "/posts/create",
+  Saved = "/posts/saved",
+  UpdatePost = "/posts/update",
+
+  // Account
   Peoples = "/peoples",
   Profile = "/profile",
-  Saved = "/saved",
-  UpdatePost = "/update-post",
-  UpdateProfile = "/update-profile",
+  UpdateProfile = "/profile/update",
 }

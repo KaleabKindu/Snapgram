@@ -24,7 +24,7 @@ const BottomBar = (props: Props) => {
                 { "bg-primary-500": active },
               )}
             >
-              <Icon size={30} />
+              <Icon size={25} />
               {link.label}
             </Link>
           );

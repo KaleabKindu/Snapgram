@@ -16,7 +16,7 @@ const PostCard = ({ post }: Props) => {
   return (
     <div className="post-card">
       <Link
-        href={`${Routes.Profile}/${post.creator?.id}`}
+        href={`${Routes.Profile}/${post.creator?.$id}`}
         className="flex items-center gap-3"
       >
         <div className="relative w-14 h-14 rounded-full">
@@ -37,7 +37,7 @@ const PostCard = ({ post }: Props) => {
             </p>
           </div>
         </div>
-        {session.id === post.creator?.id && (
+        {session.id === post.creator?.$id && (
           <Link href={`${Routes.UpdatePost}/${post.$id}`} className="ml-auto">
             <BiEdit size={30} className="text-primary-500" />
           </Link>

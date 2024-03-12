@@ -5,6 +5,9 @@ import {
   getPostById,
   getRecentPosts,
   getSavedPostsByUserId,
+  getUserById,
+  getUserLikedPosts,
+  getUserPosts,
   getUsers,
   searchPosts,
 } from "../appwrite/api";
@@ -55,5 +58,25 @@ export const useGetUsersQuery = () => {
   return useQuery({
     queryKey: [QUERY_KEYS.GET_USERS],
     queryFn: getUsers,
+  });
+};
+export const useGetUserByIdQuery = (id: string) => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.GET_USER_BY_ID, id],
+    queryFn: () => getUserById(id),
+  });
+};
+
+export const useGetUserPostsQuery = (userId: string) => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.GET_USER_POSTS],
+    queryFn: () => getUserPosts(userId),
+  });
+};
+
+export const useGetUserLikedPostsQuery = (userId: string) => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.GET_LIKED_POSTS],
+    queryFn: () => getUserLikedPosts(userId),
   });
 };

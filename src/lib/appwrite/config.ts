@@ -8,6 +8,7 @@ export const appwriteconfig = {
   userCollctionId: process.env.NEXT_PUBLIC_APPWRITE_USER_COLLECTION_ID || "",
   postCollectionId: process.env.NEXT_PUBLIC_APPWRITE_POST_COLLECTION_ID || "",
   savedCollectionId: process.env.NEXT_PUBLIC_APPWRITE_SAVED_COLLECTION_ID || "",
+  likedCollectionId: process.env.NEXT_PUBLIC_APPWRITE_LIKED_COLLECTION_ID || "",
 };
 export const client = new Client();
 

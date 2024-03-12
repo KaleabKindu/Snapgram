@@ -44,9 +44,9 @@ export const createUser = async (user: INewUser) => {
 
 export const signIn = async ({ email, password }: ICredentials) => {
   try {
-    const session = await account.createEmailSession(email, password);
+    await account.createEmailSession(email, password);
     const user = await getCurrentUser();
-    return session;
+    return user;
   } catch (error: any) {
     throw Error(error.message);
   }
@@ -73,16 +73,14 @@ export const getSession = async () => {
 
 export const getCurrentUser = async () => {
   try {
-    const user = await account.get();
-    if (!user) throw Error;
-
-    const response = await databases.listDocuments(
+    const session = await account.get();
+    if (!session) throw Error;
+    const document = await databases.listDocuments(
       appwriteconfig.databaseId,
       appwriteconfig.userCollctionId,
-      [Query.equal("id", user.$id)],
+      [Query.equal("id", session.$id)],
     );
-
-    return response.documents[0];
+    return document.documents[0];
   } catch (error) {
     console.log(error);
   }
@@ -171,16 +169,29 @@ export const getRecentPosts = async () => {
   }
 };
 
-export const likePost = async (postId: string, likes: string[]) => {
+export const likePost = async (postId: string, userId: string) => {
   try {
-    const updatedPost = await databases.updateDocument(
+    const liked = await databases.createDocument(
       appwriteconfig.databaseId,
-      appwriteconfig.postCollectionId,
-      postId,
-      { likes: [...likes] },
+      appwriteconfig.likedCollectionId,
+      ID.unique(),
+      { user: userId, post: postId },
     );
-    if (!updatedPost) throw Error;
-    return updatedPost;
+    if (!liked) throw Error;
+    return liked;
+  } catch (error) {
+    console.log(error);
+  }
+};
+export const unlikePost = async (likedId: string) => {
+  try {
+    const saved = await databases.deleteDocument(
+      appwriteconfig.databaseId,
+      appwriteconfig.likedCollectionId,
+      likedId,
+    );
+    if (!saved) throw Error;
+    return saved;
   } catch (error) {
     console.log(error);
   }
@@ -351,6 +362,53 @@ export const getUsers = async () => {
     if (!users) throw Error;
 
     return users;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getUserById = async (id: string) => {
+  try {
+    const user = await databases.getDocument(
+      appwriteconfig.databaseId,
+      appwriteconfig.userCollctionId,
+      id,
+    );
+
+    if (!user) throw Error;
+
+    return user;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getUserPosts = async (userId: string) => {
+  try {
+    const posts = await databases.listDocuments(
+      appwriteconfig.databaseId,
+      appwriteconfig.postCollectionId,
+      [Query.equal("creator", userId)],
+    );
+
+    if (!posts) throw Error;
+
+    return posts;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getUserLikedPosts = async (userId: string) => {
+  try {
+    const user = await databases.listDocuments(
+      appwriteconfig.databaseId,
+      appwriteconfig.likedCollectionId,
+      [Query.equal("user", userId)],
+    );
+    if (!user) throw Error;
+
+    return user;
   } catch (error) {
     console.log(error);
   }

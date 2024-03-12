@@ -9,6 +9,7 @@ import {
   savePost,
   signIn,
   signOut,
+  unlikePost,
   updatePostById,
 } from "../appwrite/api";
 import { QUERY_KEYS } from "./queryKeys";
@@ -70,11 +71,18 @@ export const useDeletePostByIdQuery = (postId: string) => {
     },
   });
 };
-export const useLikePostMutation = ({ postId }: { postId: string }) => {
+export const useLikePostMutation = ({
+  postId,
+  userId,
+}: {
+  postId: string;
+  userId: string;
+}) => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (likes: string[]) => likePost(postId, likes),
+    mutationFn: (likedId?: string) =>
+      likedId ? unlikePost(likedId) : likePost(postId, userId),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: [QUERY_KEYS.GET_POST_BY_ID, postId],

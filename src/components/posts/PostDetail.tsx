@@ -18,7 +18,6 @@ const PostDetail = ({ post }: Props) => {
 
   const handleDelete = (e: any) => {
     e.preventDefault();
-    console.log("here");
   };
 
   return (
@@ -34,7 +33,7 @@ const PostDetail = ({ post }: Props) => {
         </div>
         <div className="post_details-info">
           <Link
-            href={`${Routes.Profile}/${post.creator?.id}`}
+            href={`${Routes.Profile}/${post.creator?.$id}`}
             className="flex items-center w-full gap-3"
           >
             <div className="relative w-8 h-8 lg:w-12 lg:h-12 rounded-full">
