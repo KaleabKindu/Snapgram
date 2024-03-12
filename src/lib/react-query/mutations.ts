@@ -1,4 +1,10 @@
-import { ICredentials, INewPost, INewUser, IUpdatePost } from "@/types";
+import {
+  ICredentials,
+  INewPost,
+  INewUser,
+  IUpdatePost,
+  IUpdateUser,
+} from "@/types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   createPost,
@@ -11,6 +17,7 @@ import {
   signOut,
   unlikePost,
   updatePostById,
+  updateUserById,
 } from "../appwrite/api";
 import { QUERY_KEYS } from "./queryKeys";
 
@@ -139,6 +146,18 @@ export const useDeleteSavedPostMutation = ({ postId }: { postId: string }) => {
       queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.GET_POSTS] });
       queryClient.invalidateQueries({
         queryKey: [QUERY_KEYS.GET_INFINITE_POSTS],
+      });
+    },
+  });
+};
+
+export const useUpdateUserMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (updateUser: IUpdateUser) => updateUserById(updateUser),
+    onSuccess: (data, variables, context) => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_USER_BY_ID, variables.id],
       });
     },
   });

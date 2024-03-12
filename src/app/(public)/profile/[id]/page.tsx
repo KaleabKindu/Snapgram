@@ -37,7 +37,7 @@ const Profile = ({ params }: Props) => {
               <div className="relative w-20 lg:w-44 h-20 lg:h-44 rounded-full">
                 <Image
                   src={user.imageUrl || "/assets/icons/profile-placeholder.svg"}
-                  className="rounded-full"
+                  className="rounded-full object-cover"
                   fill
                   alt="Profile pic"
                 />
@@ -84,6 +84,7 @@ const Profile = ({ params }: Props) => {
                 </Button>
               </Link>
             </div>
+            <p className="text-light-3">{user.bio}</p>
             <Tabs defaultValue="posts" className="w-full">
               <TabsList className="grid w-full lg:w-[50%] grid-cols-2">
                 <TabsTrigger value="posts" className="flex gap-2 items-center">

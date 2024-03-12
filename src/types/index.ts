@@ -10,6 +10,9 @@ export interface IUser {
   imageId?: string;
   bio: string;
 }
+export interface IUpdateUser extends IUser {
+  file: File[];
+}
 
 export interface INewUser {
   name: string;

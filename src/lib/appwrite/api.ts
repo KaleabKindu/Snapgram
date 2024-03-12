@@ -1,4 +1,11 @@
-import { ICredentials, INewPost, INewUser, IPost, IUpdatePost } from "@/types";
+import {
+  ICredentials,
+  INewPost,
+  INewUser,
+  IPost,
+  IUpdatePost,
+  IUpdateUser,
+} from "@/types";
 import { account, avatars, storage } from "./config";
 import { ID, Query } from "appwrite";
 import { IUser } from "@/types";
@@ -414,6 +421,50 @@ export const getUserLikedPosts = async (userId: string) => {
     if (!user) throw Error;
 
     return user;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const updateUserById = async (user: IUpdateUser) => {
+  const hasUploadedFile = user.file.length > 0;
+  let image = {
+    imageUrl: user.imageUrl,
+    imageId: user.imageId,
+  };
+
+  try {
+    if (hasUploadedFile) {
+      const uploadedFile = await uploadFile(user.file[0]);
+
+      if (!uploadedFile) throw Error;
+
+      const imageUrl = await getFilePreviewUrl(uploadedFile?.$id as string);
+
+      if (!imageUrl) {
+        await deleteFile(uploadedFile.$id as string);
+        throw Error;
+      }
+      image = {
+        imageUrl: imageUrl.toString(),
+        imageId: uploadedFile.$id,
+      };
+    }
+
+    const payload = {
+      name: user.name,
+      username: user.username,
+      email: user.email,
+      bio: user.bio,
+      ...image,
+    };
+    const updatedUser = await databases.updateDocument(
+      appwriteconfig.databaseId,
+      appwriteconfig.userCollctionId,
+      user.id,
+      payload,
+    );
+    return updatedUser;
   } catch (error) {
     console.log(error);
   }

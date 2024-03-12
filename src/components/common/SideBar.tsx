@@ -42,7 +42,7 @@ const SideBar = (props: Props) => {
           <div className="relative w-14 h-14 rounded-full">
             <Image
               src={session.imageUrl || "/assets/icons/profile-placeholder.svg"}
-              className="rounded-full"
+              className="rounded-full object-cover"
               fill
               alt="Profile pic"
             />
